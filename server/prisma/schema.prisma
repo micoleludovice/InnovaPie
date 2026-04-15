@@ -1,0 +1,40 @@
+// Prisma schema for the Audit DMS prototype.
+// SQLite is used for zero-config local development.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Document {
+  id            Int             @id @default(autoincrement())
+  title         String
+  // JSON string of metadata: { owner, department, type, ...customFields }
+  metadata      String          @default("{}")
+  // Free-form string referencing a Config.statuses[].key (no DB enum -> fully configurable)
+  currentStatus String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  history       StatusHistory[]
+}
+
+model StatusHistory {
+  id         Int      @id @default(autoincrement())
+  documentId Int
+  status     String
+  timestamp  DateTime @default(now())
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+model Config {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  // JSON-encoded value (array or object)
+  value String
+}
