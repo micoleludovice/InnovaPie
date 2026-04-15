@@ -1,0 +1,21 @@
+{
+  "name": "innovapie-dms",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Audit Department Document Management System — customizable prototype",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "db:setup": "npm --workspace server run db:setup",
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm --workspace server run dev\" \"npm --workspace client run dev\"",
+    "dev:server": "npm --workspace server run dev",
+    "dev:client": "npm --workspace client run dev",
+    "build": "npm --workspace client run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
